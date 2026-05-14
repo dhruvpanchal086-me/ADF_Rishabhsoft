@@ -1,0 +1,76 @@
+{
+	"name": "DS_Shopeazy_Orders",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_Blob_Shopeazy",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"Filename": {
+				"type": "string",
+				"defaultValue": "file"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "orders_jan2024.csv",
+				"folderPath": "orders/month=01",
+				"container": "rawshopeazy"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "OrderId",
+				"type": "String"
+			},
+			{
+				"name": "CustomerId",
+				"type": "String"
+			},
+			{
+				"name": "ProductId",
+				"type": "String"
+			},
+			{
+				"name": "OrderDate",
+				"type": "String"
+			},
+			{
+				"name": "Quantity",
+				"type": "String"
+			},
+			{
+				"name": "UnitPrice",
+				"type": "String"
+			},
+			{
+				"name": "Discount",
+				"type": "String"
+			},
+			{
+				"name": "ShippingCost",
+				"type": "String"
+			},
+			{
+				"name": "PaymentMethod",
+				"type": "String"
+			},
+			{
+				"name": "OrderStatus",
+				"type": "String"
+			},
+			{
+				"name": "Region",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

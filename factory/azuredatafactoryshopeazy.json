@@ -1,0 +1,15 @@
+{
+	"name": "azuredatafactoryshopeazy",
+	"properties": {
+		"trustModeClaimForMi": {
+			"value": "Enabled",
+			"editable": true
+		}
+	},
+	"location": "centralindia",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "f88b9894-0eef-441e-8d5b-1cba97da08e1",
+		"tenantId": "37ace775-8ec5-4fe0-ba2a-f68e63496173"
+	}
+}

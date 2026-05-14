@@ -1,0 +1,114 @@
+{
+	"name": "PL_Master_Pipeline_Shopeazy",
+	"properties": {
+		"activities": [
+			{
+				"name": "LoadDimension",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_Load_Dimensions",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "LoadCleanOrders",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "LoadDimension",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_Transform_Orders",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "LoadEnrichedData",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [
+					{
+						"activity": "LoadCleanOrders",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.00:30:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "DF_OrdersCleaned",
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"AllOrders": {
+								"Filename": "file"
+							}
+						}
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			},
+			{
+				"name": "NotifiedOfSuccess",
+				"type": "WebHook",
+				"dependsOn": [
+					{
+						"activity": "LoadEnrichedData",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": " https://webhook.site/077e3dbe-bb90-4f46-9bcb-a4f5857d4f0d",
+					"method": "POST",
+					"body": {
+						"pipeline": "@pipeline().pipeline}",
+						"status": "Sucess",
+						"runId": "@{pipeline().RunId}",
+						"completedAt": "@{utcNow()}",
+						"message": "Shopy Easy Pipeline completed sucessfully"
+					},
+					"timeout": "00:10:00"
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2026-05-12T06:33:58Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
